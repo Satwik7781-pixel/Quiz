@@ -42,7 +42,7 @@ public ResponseEntity<String> createQuiz(String category,int numQ,String title){
     return new ResponseEntity<>(questionsForUser,HttpStatus.OK);
     }
 
-    public ResponseEntity<Integer> calculateResult(Integer id, List<Response> responses) {
+    public ResponseEntity<String> calculateResult(Integer id, List<Response> responses) {
     Quiz quiz=quizDao.findById(id).get();
     List<Question> questions=quiz.getQuestions();
     int right=0;
@@ -52,6 +52,6 @@ public ResponseEntity<String> createQuiz(String category,int numQ,String title){
       right++;
       i++;
     }
-   return new ResponseEntity<>(right,HttpStatus.OK);
+   return new ResponseEntity<>("correct answers are"+" "+ right,HttpStatus.OK);
     }
 }
