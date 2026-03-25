@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class QuestionService {
@@ -52,23 +53,26 @@ return new ResponseEntity<>(questions,HttpStatus.OK);
 
 
     public ResponseEntity<List<QuestionWrapper>> getQuestionsFromId(List<Integer> questionIds) {
-        List<QuestionWrapper> wrappers=new ArrayList<>();
-        List<Question> questions =new ArrayList<>();
-        for(Integer id:questionIds){
-            questions.add(questionDao.findById(id).get());
-        }
-        for(Question question:questions){
-            QuestionWrapper wrapper=new QuestionWrapper();
+
+        List<QuestionWrapper> wrappers = new ArrayList<>();
+
+        for(Integer id : questionIds){
+
+            Question question = questionDao.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Question not found: " + id));
+
+            QuestionWrapper wrapper = new QuestionWrapper();
             wrapper.setId(question.getId());
             wrapper.setQuestionTitle(question.getQuestionTitle());
             wrapper.setOption1(question.getOption1());
             wrapper.setOption2(question.getOption2());
             wrapper.setOption3(question.getOption3());
             wrapper.setOption4(question.getOption4());
+
             wrappers.add(wrapper);
         }
-        return new ResponseEntity<>(wrappers,HttpStatus.OK);
 
+        return new ResponseEntity<>(wrappers, HttpStatus.OK);
     }
 
     public ResponseEntity<Integer> getScore(List<Response> responses) {
