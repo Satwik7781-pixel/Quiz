@@ -1,10 +1,10 @@
 package com.satwik.question_service.controller;
 
-
 import com.satwik.question_service.model.Question;
 import com.satwik.question_service.model.QuestionWrapper;
 import com.satwik.question_service.model.Response;
 import com.satwik.question_service.service.QuestionService;
+import org.springframework.core.env.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +17,8 @@ import java.util.List;
 public class QuestionController {
     @Autowired
     QuestionService questionService;
+    @Autowired
+    Environment environment;
     @GetMapping("/allQuestions")
     public ResponseEntity<List<Question>> getAllQuestions(){
         return questionService.getAllQuestions();
@@ -36,9 +38,12 @@ public class QuestionController {
     }
     @PostMapping("getQuestions")
     public ResponseEntity<List<QuestionWrapper>> getQuestionsFromId(@RequestBody List<Integer> questionIds){
-     return questionService.getQuestionsFromId(questionIds);
+        System.out.println(environment.getProperty("local.server.port"));
+        return questionService.getQuestionsFromId(questionIds);
 
     }
+
+
     @PostMapping("getScore")
     public ResponseEntity<Integer> getScore(@RequestBody List<Response> responses){
         return questionService.getScore(responses);
